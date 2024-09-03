@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import Navi from './components/navi/Navi';
 import Category from './components/category/Category';

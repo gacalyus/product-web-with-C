@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './Product.css';
 import { ProductItem } from '../../models/productModel/product';
-import { ProductResponseModel } from '../../models/productModel/productResponseModel';
 import { getList } from '../../services/getRequest';
+import { ListResponseModel } from '../../models/listResponseModel';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[]>([]);
@@ -39,11 +39,10 @@ function Product() {
         }]
 
     useEffect(() => {
-        getList<ProductResponseModel>('/api/products/getall').then((data) => setProducts(data.data))
+        getList<ListResponseModel<ProductItem>>('/api/products/getall').then((data) => setProducts(data.data));
     }, []);
 
     return (
-
         <table className="table">
             <thead>
                 <tr>
@@ -65,9 +64,7 @@ function Product() {
                     </tr>
                 )}
             </tbody>
-
         </table>
-
     );
 }
 

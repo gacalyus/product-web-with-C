@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Category.css';
+import { CategoryItem } from '../../models/categoryModel/category';
+import { getList } from '../../services/getRequest';
+import { ListResponseModel } from '../../models/listResponseModel';
 
 function Category() {
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
+    const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
+
+
+    useEffect(() => {
+        getList<ListResponseModel<CategoryItem>>('/api/category/getall').then((data) => setCategories(data.data))
+
+    }, []);
+
+    useEffect(() => {
+        console.log(currentCategory)
+    }, [currentCategory]);
+
     return (
         <div className="Category">
             <ul className="list-group">
-                <li className="list-group-item">An item</li>
-                <li className="list-group-item">A second item</li>
-                <li className="list-group-item">A third item</li>
-                <li className="list-group-item">A fourth item</li>
-                <li className="list-group-item">And a fifth one</li>
+                {categories.map((item) =>
+                    <li onClick={() => setCurrentCategory(item)} key={item.categoryId} className="list-group-item">{item.categoryName} </li>
+                )}
             </ul>
-        </div>
+        </div >
     );
 }
 
