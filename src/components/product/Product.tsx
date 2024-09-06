@@ -3,10 +3,14 @@ import './Product.css';
 import { ProductItem } from '../../models/productModel/product';
 import { getList } from '../../services/getRequest';
 import { ListResponseModel } from '../../models/listResponseModel';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { add } from '../../features/productSlice';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[]>([]);
+    const dispatch = useAppDispatch()
 
+    const productList = useAppSelector((state) => state)
 
     const productsMoc: ProductItem[] = [
         {
@@ -38,6 +42,12 @@ function Product() {
             "unitPrice": 22.0000
         }]
 
+    useEffect(() => {
+        dispatch(add(products))
+    }, [products]);
+    useEffect(() => {
+        console.log("productList", productList)
+    }, [productList]);
     useEffect(() => {
         getList<ListResponseModel<ProductItem>>('/api/products/getall').then((data) => setProducts(data.data));
     }, []);

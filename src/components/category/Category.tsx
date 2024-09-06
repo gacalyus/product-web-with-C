@@ -11,18 +11,19 @@ function Category() {
 
     useEffect(() => {
         getList<ListResponseModel<CategoryItem>>('/api/category/getall').then((data) => setCategories(data.data))
-
     }, []);
-
-    useEffect(() => {
-        console.log(currentCategory)
-    }, [currentCategory]);
 
     return (
         <div className="Category">
             <ul className="list-group">
                 {categories.map((item) =>
-                    <li onClick={() => setCurrentCategory(item)} key={item.categoryId} className="list-group-item">{item.categoryName} </li>
+                    <li
+                        onClick={() => setCurrentCategory(item)}
+                        key={item.categoryId}
+                        className="list-group-item"
+                    >
+                        {item.categoryName}
+                    </li>
                 )}
             </ul>
         </div >
