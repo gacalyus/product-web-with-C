@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './Product.css';
 import { ProductItem } from '../../models/productModel/product';
-import { getList } from '../../services/getRequest';
-import { ListResponseModel } from '../../models/listResponseModel';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { add } from '../../features/productSlice';
+import { fetchList } from '../../features/productSlice';
+// import { add } from '../../features/productSlice';
 
 function Product() {
-    const [products, setProducts] = useState<ProductItem[]>([]);
+    const [products, setProducts] = useState<ProductItem[] | any>([]);
     const dispatch = useAppDispatch()
 
-    const productList = useAppSelector((state) => state)
+    const productList = useAppSelector((state) => state.product)
 
     const productsMoc: ProductItem[] = [
         {
@@ -43,14 +42,12 @@ function Product() {
         }]
 
     useEffect(() => {
-        dispatch(add(products))
-    }, [products]);
-    useEffect(() => {
-        console.log("productList", productList)
-    }, [productList]);
-    useEffect(() => {
-        getList<ListResponseModel<ProductItem>>('/api/products/getall').then((data) => setProducts(data.data));
+        dispatch(fetchList())
     }, []);
+
+    useEffect(() => {
+        setProducts(productList.data)
+    }, [productList]);
 
     return (
         <table className="table">
@@ -64,13 +61,19 @@ function Product() {
                 </tr>
             </thead>
             <tbody>
-                {products.map((item) =>
-                    <tr key={item.productId}>
-                        <th scope="row">{item.productId}</th>
-                        <td>{item.categoryId}</td>
-                        <td>{item.productName}</td>
-                        <td>{item.unitsInStock}</td>
-                        <td>{item.unitPrice}</td>
+                {productList.data.length > 0 ? (
+                    products.map((product: ProductItem) => (
+                        <tr key={product.productId}>
+                            <td>{product.productId}</td>
+                            <td>{product.categoryId}</td>
+                            <td>{product.productName}</td>
+                            <td>{product.unitsInStock}</td>
+                            <td>{product.unitPrice}</td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan={5}>Yükleniyor...</td>
                     </tr>
                 )}
             </tbody>
