@@ -14,6 +14,7 @@ function Category() {
     const categoryList = useAppSelector((state) => state.category)
 
     useEffect(() => {
+
         setCategories(categoryList.data)
     }, [categoryList]);
 
@@ -31,7 +32,10 @@ function Category() {
                 {categoryList.data.length > 0 && !categoryList.loading ? (
                     categories.map((item: CategoryItem) =>
                         <li
-                            onClick={() => setCurrentCategory(item)}
+                            onClick={() => {
+                                setCurrentCategory(item);
+                                // dispatch(getAllbyCategoryid(item));
+                            }}
                             key={item.categoryId}
                             className={"list-group-item" + activeCategory(item)}
                         >
