@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './Category.css';
 import { CategoryItem } from '../../models/categoryModel/category';
-import { getList } from '../../services/getRequest';
-import { ListResponseModel } from '../../models/listResponseModel';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchCategoryList } from '../../features/categorySlice';
+import { fetchList, getAllbyCategoryid } from '../../features/productSlice';
 
 function Category() {
     const [categories, setCategories] = useState<CategoryItem[] | any>([]);
@@ -16,25 +15,38 @@ function Category() {
     useEffect(() => {
 
         setCategories(categoryList.data)
+
     }, [categoryList]);
 
     useEffect(() => {
         dispatch(fetchCategoryList());
     }, []);
 
-    const activeCategory = (category: CategoryItem) => {
+    const activeCategory = (category: CategoryItem | null) => {
+        if (!category) return " active";
         return currentCategory?.categoryId === category.categoryId ? " active" : '';
     };
+
+    const allActiveElement = currentCategory ? " " : " active";
+
     return (
         <div className="Category">
             <ul className="list-group">
 
+                <li
+                    onClick={() => {
+                        dispatch(fetchList());
+                        setCurrentCategory(undefined);
+                    }}
+                    className={"list-group-item" + allActiveElement}>
+                    Tüm Ürünler
+                </li>
                 {categoryList.data.length > 0 && !categoryList.loading ? (
                     categories.map((item: CategoryItem) =>
                         <li
                             onClick={() => {
                                 setCurrentCategory(item);
-                                // dispatch(getAllbyCategoryid(item));
+                                dispatch(getAllbyCategoryid(item.categoryId));
                             }}
                             key={item.categoryId}
                             className={"list-group-item" + activeCategory(item)}
@@ -43,12 +55,18 @@ function Category() {
                         </li>
                     )
                 ) : (
-                    <tr>
-                        <td colSpan={5}>Yükleniyor...</td>
-                    </tr>
+                    (
+                        categoryList.error ?
+                            <tr>
+                                <td colSpan={5}>{categoryList.error} </td>
+                            </tr> :
+                            <tr>
+                                <td colSpan={5}>Yükleniyor...</td>
+                            </tr>
+
+                    )
                 )}
             </ul>
-            <p> {currentCategory?.categoryName} kategorisi şeçili.</p>
         </div >
     );
 }

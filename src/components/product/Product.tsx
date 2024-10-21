@@ -72,10 +72,16 @@ function Product() {
                         </tr>
                     ))
                 ) : (
-                    <tr>
-                        <td colSpan={5}>Yükleniyor...</td>
-                    </tr>
+                    productList.error ?
+                        <tr>
+                            <td colSpan={5}>{productList.error} </td>
+                        </tr> :
+                        <tr>
+                            <td colSpan={5}>Yükleniyor...</td>
+                        </tr>
+
                 )}
+
             </tbody>
         </table>
     );

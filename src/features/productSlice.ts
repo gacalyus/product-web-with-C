@@ -18,6 +18,12 @@ export const fetchList = createAsyncThunk("fetchList", async () => {
     return response.data;
 })
 
+export const getAllbyCategoryid = createAsyncThunk("getAllbyCategoryid", async (id: number) => {
+
+    const response = await axios.get<ListResponseModel<ProductItem>[]>(`/api/products/getallbycategoryid?id=${id}`);
+    return response.data;
+})
+
 const productSlice = createSlice({
     name: "product",
     initialState,
@@ -31,6 +37,18 @@ const productSlice = createSlice({
             state.loading = false;
         })
         builder.addCase(fetchList.rejected, (state, action) => {
+            state.loading = false;
+            state.error = "Bir hata oluştu!";
+        })
+        builder.addCase(getAllbyCategoryid.pending, (state, action) => {
+            state.loading = true;
+            state.error = "";
+        });
+        builder.addCase(getAllbyCategoryid.fulfilled, (state, action: PayloadAction<any>) => {
+            state.data = action.payload.data;
+            state.loading = false;
+        })
+        builder.addCase(getAllbyCategoryid.rejected, (state, action) => {
             state.loading = false;
             state.error = "Bir hata oluştu!";
         })
