@@ -3,7 +3,7 @@ import './Product.css';
 import { ProductItem } from '../../models/productModel/product';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchList } from '../../features/productSlice';
-// import { add } from '../../features/productSlice';
+import { VatAdded } from '../customComponents/CustomFunctions';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[] | any>([]);
@@ -56,8 +56,9 @@ function Product() {
                     <th scope="col">Ürün İd</th>
                     <th scope="col">Kategori İd</th>
                     <th scope="col">Ürün Adı</th>
-                    <th scope="col">Stok Adedi</th>
                     <th scope="col">Fiyat</th>
+                    <th scope="col">KDV'li Fiyat</th>
+                    <th scope="col">Stok Adedi</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,8 +68,9 @@ function Product() {
                             <td>{product.productId}</td>
                             <td>{product.categoryId}</td>
                             <td>{product.productName}</td>
-                            <td>{product.unitsInStock}</td>
                             <td>{product.unitPrice}</td>
+                            <td> {VatAdded(product.unitPrice)}</td>
+                            <td>{product.unitsInStock}</td>
                         </tr>
                     ))
                 ) : (
