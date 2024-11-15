@@ -4,7 +4,7 @@ import { ProductItem } from '../../models/productModel/product';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchList, getAllbyCategoryid } from '../../features/productSlice';
 import { VatAdded } from '../customComponents/CustomFunctions';
-import { FilterSearch } from '../customComponents/TsCustomFunction';
+import { AddToCart, FilterSearch } from '../customComponents/TsCustomFunction';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[] | any>([]);
@@ -52,7 +52,6 @@ function Product() {
 
         } else {
             if (activeCategory) {
-                console.log(activeCategory)
                 dispatch(getAllbyCategoryid(activeCategory));
             } else {
                 dispatch(fetchList())
@@ -95,6 +94,7 @@ function Product() {
                         <th scope="col">Fiyat</th>
                         <th scope="col">KDV'li Fiyat</th>
                         <th scope="col">Stok Adedi</th>
+                        <th style={{ textAlign: 'center' }} scope="col">İşlemler</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,6 +107,8 @@ function Product() {
                                 <td>{product.unitPrice}</td>
                                 <td> {VatAdded(product.unitPrice)}</td>
                                 <td>{product.unitsInStock}</td>
+                                <td style={{ textAlign: 'center' }} >   <button onClick={() => AddToCart(product)} type='button' className='btn btn-success' >Sepete Ekle</button></td>
+
                             </tr>
                         ))
                     ) : (
@@ -122,6 +124,7 @@ function Product() {
 
                 </tbody>
             </table>
+
         </>
 
     );

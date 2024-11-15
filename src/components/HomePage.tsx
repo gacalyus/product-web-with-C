@@ -1,4 +1,5 @@
 import Category from "./category/Category";
+import Toast from "./customComponents/Toast";
 import Product from "./product/Product";
 
 
@@ -13,6 +14,7 @@ function HomePage() {
             <div className='col-md-9' >
                 <Product />
             </div>
+            <Toast />
         </div>
 
     );
