@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Category.css';
 import { CategoryItem } from '../../models/categoryModel/category';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchCategoryList } from '../../features/categorySlice';
+import { changeActiveCategory, fetchCategoryList } from '../../features/categorySlice';
 import { fetchList, getAllbyCategoryid } from '../../features/productSlice';
 
 function Category() {
@@ -10,7 +10,7 @@ function Category() {
     const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
     const dispatch = useAppDispatch()
 
-    const categoryList = useAppSelector((state) => state.category)
+    const categoryList = useAppSelector((state) => state.category.value)
 
     useEffect(() => {
 
@@ -37,6 +37,7 @@ function Category() {
                     onClick={() => {
                         dispatch(fetchList());
                         setCurrentCategory(undefined);
+                        dispatch(changeActiveCategory(0));
                     }}
                     className={"list-group-item" + allActiveElement}>
                     Tüm Ürünler
@@ -47,6 +48,7 @@ function Category() {
                             onClick={() => {
                                 setCurrentCategory(item);
                                 dispatch(getAllbyCategoryid(item.categoryId));
+                                dispatch(changeActiveCategory(item.categoryId));
                             }}
                             key={item.categoryId}
                             className={"list-group-item" + activeCategory(item)}

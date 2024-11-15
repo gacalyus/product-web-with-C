@@ -3,12 +3,20 @@ import { ListResponseModel } from "../models/listResponseModel";
 import axios from "axios";
 import { CategoryItem } from "../models/categoryModel/category";
 
-export const initialState: ListResponseModel<CategoryItem[]> = {
-    data: [],
-    success: false,
-    message: '',
-    loading: false,
-    error: ''
+export interface CategoryState {
+    value: ListResponseModel<CategoryItem[]>;
+    activeCategory: number;
+}
+
+const initialState: CategoryState = {
+    value: {
+        data: [],
+        success: false,
+        message: '',
+        loading: false,
+        error: '',
+    },
+    activeCategory: 0
 }
 
 export const fetchCategoryList = createAsyncThunk("fetchCategoryList", async () => {
@@ -21,19 +29,25 @@ const categorySlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder.addCase(fetchCategoryList.pending, (state, action) => {
-            state.loading = true;
-            state.error = "";
+            state.value.loading = true;
+            state.value.error = "";
         });
         builder.addCase(fetchCategoryList.fulfilled, (state, action: PayloadAction<any>) => {
-            state.data = action.payload.data;
-            state.loading = false;
+            state.value.data = action.payload.data;
+            state.value.loading = false;
         });
         builder.addCase(fetchCategoryList.rejected, (state, action) => {
-            state.loading = false;
-            state.error = "Bir hata oluştu"
+            state.value.loading = false;
+            state.value.error = "Bir hata oluştu"
         })
     },
-    reducers: {}
+    reducers: {
+        changeActiveCategory: (state, action: PayloadAction<number>) => {
+            state.activeCategory = action.payload;
+            return state;
+        },
+    }
 });
 
+export const { changeActiveCategory } = categorySlice.actions
 export default categorySlice.reducer;

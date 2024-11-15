@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './Product.css';
 import { ProductItem } from '../../models/productModel/product';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { fetchList } from '../../features/productSlice';
+import { fetchList, getAllbyCategoryid } from '../../features/productSlice';
 import { VatAdded } from '../customComponents/CustomFunctions';
+import { FilterSearch } from '../customComponents/TsCustomFunction';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[] | any>([]);
+    const [searchText, setSearchText] = useState<string>("");
     const dispatch = useAppDispatch()
 
-    const productList = useAppSelector((state) => state.product)
+    const productList = useAppSelector((state) => state.product);
+    const activeCategory = useAppSelector((state) => state.category.activeCategory)
 
     const productsMoc: ProductItem[] = [
         {
@@ -42,6 +45,26 @@ function Product() {
         }]
 
     useEffect(() => {
+
+        if (searchText && searchText.length > 1) {
+            const filterArr = FilterSearch(products, searchText);
+            setProducts(filterArr)
+
+        } else {
+            if (activeCategory) {
+                console.log(activeCategory)
+                dispatch(getAllbyCategoryid(activeCategory));
+            } else {
+                dispatch(fetchList())
+            }
+        }
+    }, [searchText]);
+
+    const changeSearchValue = (value: string) => {
+        setSearchText(value.trim());
+    }
+
+    useEffect(() => {
         dispatch(fetchList())
     }, []);
 
@@ -49,43 +72,58 @@ function Product() {
         setProducts(productList.data)
     }, [productList]);
 
+    const searchInfolabel = !searchText ? " d-none" : ""
+
     return (
-        <table className="table">
-            <thead>
-                <tr>
-                    <th scope="col">Ürün İd</th>
-                    <th scope="col">Kategori İd</th>
-                    <th scope="col">Ürün Adı</th>
-                    <th scope="col">Fiyat</th>
-                    <th scope="col">KDV'li Fiyat</th>
-                    <th scope="col">Stok Adedi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {productList.data.length > 0 ? (
-                    products.map((product: ProductItem) => (
-                        <tr key={product.productId}>
-                            <td>{product.productId}</td>
-                            <td>{product.categoryId}</td>
-                            <td>{product.productName}</td>
-                            <td>{product.unitPrice}</td>
-                            <td> {VatAdded(product.unitPrice)}</td>
-                            <td>{product.unitsInStock}</td>
-                        </tr>
-                    ))
-                ) : (
-                    productList.error ?
-                        <tr>
-                            <td colSpan={5}>{productList.error} </td>
-                        </tr> :
-                        <tr>
-                            <td colSpan={5}>Yükleniyor...</td>
-                        </tr>
+        <>
 
-                )}
+            <div className="my-3 ">
+                <label className="form-label">Ürün Ara</label>
+                <input onChange={(val) => changeSearchValue(val.target.value)} type="text" className="form-control" placeholder="Arama ifadesi giriniz..." id="filterText" />
+            </div>
 
-            </tbody>
-        </table>
+            <div className={"alert alert-success my-3 " + searchInfolabel} >
+                {searchText + " aradınız."}
+            </div>
+
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Ürün İd</th>
+                        <th scope="col">Kategori İd</th>
+                        <th scope="col">Ürün Adı</th>
+                        <th scope="col">Fiyat</th>
+                        <th scope="col">KDV'li Fiyat</th>
+                        <th scope="col">Stok Adedi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {productList.data.length > 0 ? (
+                        products.map((product: ProductItem) => (
+                            <tr key={product.productId}>
+                                <td>{product.productId}</td>
+                                <td>{product.categoryId}</td>
+                                <td>{product.productName}</td>
+                                <td>{product.unitPrice}</td>
+                                <td> {VatAdded(product.unitPrice)}</td>
+                                <td>{product.unitsInStock}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        productList.error ?
+                            <tr>
+                                <td colSpan={5}>{productList.error} </td>
+                            </tr> :
+                            <tr>
+                                <td colSpan={5}>Yükleniyor...</td>
+                            </tr>
+
+                    )}
+
+                </tbody>
+            </table>
+        </>
+
     );
 }
 
