@@ -4,12 +4,14 @@ import { ProductItem } from '../../models/productModel/product';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { fetchList, getAllbyCategoryid } from '../../features/productSlice';
 import { VatAdded } from '../customComponents/CustomFunctions';
-import { AddToCart, FilterSearch } from '../customComponents/TsCustomFunction';
+import { FilterSearch } from '../customComponents/TsCustomFunction';
+import { AddToCartCopm } from '../customComponents/AddToCartComp';
 
 function Product() {
     const [products, setProducts] = useState<ProductItem[] | any>([]);
     const [searchText, setSearchText] = useState<string>("");
     const dispatch = useAppDispatch()
+    const addToCart = AddToCartCopm();
 
     const productList = useAppSelector((state) => state.product);
     const activeCategory = useAppSelector((state) => state.category.activeCategory)
@@ -107,7 +109,7 @@ function Product() {
                                 <td>{product.unitPrice}</td>
                                 <td> {VatAdded(product.unitPrice)}</td>
                                 <td>{product.unitsInStock}</td>
-                                <td style={{ textAlign: 'center' }} >   <button onClick={() => AddToCart(product)} type='button' className='btn btn-success' >Sepete Ekle</button></td>
+                                <td style={{ textAlign: 'center' }} >   <button onClick={() => addToCart(product)} type='button' className='btn btn-success' >Sepete Ekle</button></td>
 
                             </tr>
                         ))

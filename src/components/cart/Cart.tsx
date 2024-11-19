@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import './Cart.css';
 import { CategoryItem } from '../../models/categoryModel/category';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 
 function Cart() {
+
+    const cartItems = useAppSelector((state) => state.cart.cartItems);
+
     const [categories, setCategories] = useState<CategoryItem[] | any>([]);
     const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
     const dispatch = useAppDispatch()
