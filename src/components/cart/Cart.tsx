@@ -28,11 +28,25 @@ function Cart() {
           Sepet
         </a>
         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li>
-            <a className="dropdown-item" href="#">
-              Something else here
-            </a>
-          </li>
+          {cartItems && cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <li key={item.product.productId}>
+                <a
+                  className="dropdown-item"
+                  href="#"
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <p> {item.product.productName} </p> <p> {item.quantity} </p>
+                </a>
+              </li>
+            ))
+          ) : (
+            <>Something else here nono </>
+          )}
         </ul>
       </li>
     </div>

@@ -6,18 +6,7 @@ export interface CartState {
 }
 
 const initialState: CartState = {
-  cartItems: [
-    {
-      product: {
-        productId: 4,
-        categoryId: 2,
-        productName: "Chef Anton's Cajun Seasoning",
-        unitsInStock: 53,
-        unitPrice: 22.0,
-      },
-      quantity: 2,
-    },
-  ],
+  cartItems: [],
 };
 const cartSlice = createSlice({
   name: "cart",
