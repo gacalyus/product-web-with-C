@@ -20,7 +20,7 @@ const initialState: CategoryState = {
 }
 
 export const fetchCategoryList = createAsyncThunk("fetchCategoryList", async () => {
-    const response = await axios.get<ListResponseModel<CategoryItem>[]>("/api/category/getall");
+    const response = await axios.get<ListResponseModel<CategoryItem>[]>("/api/category/getallcategory");
     return response.data;
 });
 

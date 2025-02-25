@@ -3,6 +3,7 @@ import Navi from "./components/navi/Navi";
 import NotFoundPage from "./components/NotFoundPage";
 import HomePage from "./components/HomePage";
 import ProductAdd from "./components/productAdd/ProductAdd";
+import Toast from "./components/customComponents/Toast";
 
 function RootComponent() {
   return (
@@ -15,6 +16,8 @@ function RootComponent() {
         <Route path="/product-add" element={<ProductAdd />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      <Toast />
     </div>
   );
 }

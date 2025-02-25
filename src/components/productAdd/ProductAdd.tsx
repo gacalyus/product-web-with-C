@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProductItem } from "../../models/productModel/product";
+import { addProduct } from "../../features/productSlice";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { showToastMessage } from "../customComponents/Toast";
 
 function ProductAdd() {
+  const dispatch = useAppDispatch();
   const [productAddForm, setProductAddForm] = useState<ProductItem>({
     productId: 0,
     categoryId: 0,
@@ -9,11 +13,16 @@ function ProductAdd() {
     unitsInStock: 0,
     unitPrice: 0,
   });
+  const addState = useAppSelector((state) => state.product);
+
   const onChangeHandler = (e: any) => {
-    setProductAddForm({ ...productAddForm, [e.target.name]: e.target.value });
+    setProductAddForm({
+      ...productAddForm,
+      [e.target.name]: Number(e.target.value),
+    });
   };
   const add = (e: any) => {
-    console.log("ekle", productAddForm);
+    dispatch(addProduct(productAddForm));
   };
 
   return (
@@ -33,7 +42,12 @@ function ProductAdd() {
                   id="productName"
                   placeholder="Ürün Adı"
                   className="form-control"
-                  onChange={onChangeHandler}
+                  onChange={(e) => {
+                    setProductAddForm({
+                      ...productAddForm,
+                      productName: e.target.value,
+                    });
+                  }}
                 />
               </div>
               <div className="mb-3">
